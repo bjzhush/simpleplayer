@@ -52,25 +52,26 @@ while(count($arr_may)<$real_randnum){
 echo "<html>
 	<head>
 	<title>".$thissong."--我的八音盒</title>
-<script src='https://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js'></script>
+
+    <script src='./jquery.js'></script>
+
 	<script type='text/javascript'>
-$(document).keyup(function(e){
-	var key =  e.which;
-	if(key == 32){
-		var song = $('#media').get(0);
-		if(song.paused)
-		{
-			song.play();
-}
-else
-{
-	song.pause();
-
-}
-					}
+    $(document).keyup(function(e){
+        var key =  e.which;
+        if(key == 32){
+            var song = $('#media').get(0);
+            if(song.paused)
+            {
+                song.play();
+            }
+            else
+            {
+                song.pause();
+            }
+        }
 	});
+    </script>
 
-  </script>
 	</head>
 	<body>
 	<br> <br> <br> <br> <br> <br>
