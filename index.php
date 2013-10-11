@@ -9,9 +9,14 @@
 $fpath = 'music';
 $rand_num = 9;
 //检查refer，禁止连续播放相同都歌曲
-if(isset($_SERVER['QUERY_STRING'])&&strlen($_SERVER['QUERY_STRING'])&&(!strpos($_SERVER['HTTP_REFERER'],$_SERVER['QUERY_STRING'])===FALSE))  {
-  	unset($_GET['song']);
-}
+if (
+        isset($_SERVER['QUERY_STRING'])  && 
+        strlen($_SERVER['QUERY_STRING']) &&
+        isset($_SERVER['HTTP_REFERER'])  && 
+        !strpos($_SERVER['HTTP_REFERER'],$_SERVER['QUERY_STRING'])===FALSE
+   ) {
+    unset($_GET['song']);
+   }
 
 
 if ($handle = opendir($fpath)) {
