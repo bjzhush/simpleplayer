@@ -59,6 +59,9 @@ echo "<html>
 	<title>".$thissong."--我的八音盒</title>
 
     <script src='./jquery.js'></script>
+    <script src='./jquery.cookie.js'></script>
+    <link type='text/css' rel='stylesheet' href='./style.css'>
+
 
 	<script type='text/javascript'>
     $(document).keyup(function(e){
@@ -75,6 +78,16 @@ echo "<html>
             }
         }
 	});
+
+    function repeatorreload()
+    {
+        if ($('#myonoffswitch').is(':checked') == true) {
+            document.getElementById('media').currentTime = 0;
+            document.getElementById('media').play();
+        } else {
+            document.location.reload();
+        }
+    }
     </script>
 
 	</head>
@@ -86,11 +99,18 @@ echo "<br><br>";
 
 echo $alertmsg;
 
-echo ' <audio onended="document.location.reload()" id="media" controls="controls" autoplay="autoplay">
+echo ' <audio onended="repeatorreload()" id="media" controls="controls" autoplay="autoplay">
 	<source src="music/'.$thissong.'" type="audio/mpeg" />
 	Your browser does not support the audio element.
 	</audio>
 	';
+echo '<div class="onoffswitch">
+    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" unchecked>
+    <label class="onoffswitch-label" for="myonoffswitch">
+        <div class="onoffswitch-inner"></div>
+        <div class="onoffswitch-switch"></div>
+    </label>
+</div> ';
 echo '<a href="'.$_SERVER['SCRIPT_NAME'].'"><img src=./next.jpg></a><br><br><br><br>';
 echo "或许也可以听听:<br><br><br>";
 
