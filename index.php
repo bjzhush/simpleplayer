@@ -64,7 +64,7 @@ echo "<html>
 
 
 	<script type='text/javascript'>
-    $(document).keyup(function(e){
+    $(document).keydown(function(e){
         var key =  e.which;
         if(key == 32){
             var song = $('#media').get(0);
@@ -76,6 +76,16 @@ echo "<html>
             {
                 song.pause();
             }
+        } else if (key == 78) {
+            window.location = './index.php';
+        } else if (key == 38) {
+            document.getElementById('media').volume = document.getElementById('media').volume+0.1;
+        } else if (key == 40) {
+            document.getElementById('media').volume = document.getElementById('media').volume-0.1;
+        } else if (key == 37) {
+            document.getElementById('media').currentTime = document.getElementById('media').currentTime-5;
+        } else if (key == 39) {
+            document.getElementById('media').currentTime = document.getElementById('media').currentTime+5;
         }
 	});
 
