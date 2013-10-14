@@ -19,15 +19,24 @@ if (
    }
 
 
-if ($handle = opendir($fpath)) {
-	
-	$all = array();
-	while (false !== ($file = readdir($handle))) {
-		if(!($file==='.'||$file==='..')){
-		array_push($all,$file);
-		}
-		    }
-	closedir($handle);
+$cacheFile =  'cache.bin';
+if (file_exists($cacheFile)) {
+    $fp = file_get_contents($cacheFile);
+    $all = json_decode($fp, TRUE);
+} else {
+    if ($handle = opendir($fpath)) {
+        
+        $all = array();
+        while (false !== ($file = readdir($handle))) {
+            if(!($file==='.'||$file==='..')){
+            array_push($all,$file);
+            }
+                }
+        closedir($handle);
+    } else {
+        eixt('Unable to open dir');
+    }
+    file_put_contents($cacheFile, json_encode($all),  LOCK_EX);
 }
 
 if(isset($_GET['song'])&&strlen($_GET['song'])){
@@ -40,10 +49,8 @@ $thissong = $all[rand(0,count($all)-1)];
 
 
 if(!file_exists(rtrim($fpath).'/'.$thissong)){
-	$alertmsg = "File ".$thissong." Seems doesnot exist";
-}
-else{
-	$alertmsg = '';
+	$errorMessage = "File ".$thissong." Seems doesnot exist";
+    exit($errorMessage);
 }
 
 $arr_may = array();
@@ -56,14 +63,25 @@ while(count($arr_may)<$real_randnum){
 
 echo "<html>
 	<head>
-	<title>".$thissong."--我的八音盒</title>
+	<title>".$thissong."--我的八音盒</title>";
 
+?>
     <script src='./jquery.js'></script>
-    <script src='./jquery.cookie.js'></script>
     <link type='text/css' rel='stylesheet' href='./style.css'>
 
 
 	<script type='text/javascript'>
+    $(document).ready(function(){
+        // show play time count
+        var playCount = parseInt(localStorage.getItem('playCount'));
+        if (playCount == undefined ) {
+            playCount = 1;
+        }
+        playCount += 1;
+        localStorage.setItem('playCount', playCount);
+        $('#playCount').html(playCount);
+    });
+
     $(document).keydown(function(e){
         var key =  e.which;
         if(key == 32){
@@ -102,35 +120,26 @@ echo "<html>
 
 	</head>
 	<body>
-	<br> <br> <br> <br> <br> <br>
-	";
-echo '<div align="center">现在播放的是：'.$thissong;
-echo "<br><br>";
+    <center>
+<?php
 
-echo $alertmsg;
 
+echo "<br><br><br><br><br><br>";
 echo ' <audio onended="repeatorreload()" id="media" controls="controls" autoplay="autoplay">
 	<source src="music/'.$thissong.'" type="audio/mpeg" />
 	Your browser does not support the audio element.
 	</audio>
-	';
-echo '<div class="onoffswitch">
-    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" unchecked>
-    <label class="onoffswitch-label" for="myonoffswitch">
-        <div class="onoffswitch-inner"></div>
-        <div class="onoffswitch-switch"></div>
-    </label>
-</div> ';
-echo '<a href="'.$_SERVER['SCRIPT_NAME'].'"><img src=./next.jpg></a><br><br><br><br>';
-echo "或许也可以听听:<br><br><br>";
+<a href="'.$_SERVER['SCRIPT_NAME'].'"><img src=./next.jpg height="30" width="30"></a><br><br><br><br><br><br><br><br><br>
+<div width="30" class="onoffswitch"> <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" unchecked> <label class="onoffswitch-label" for="myonoffswitch"> <div class="onoffswitch-inner"></div> <div class="onoffswitch-switch"></div> </label> </div> ';
+echo '<div align="center"><h1>现在播放的是：<font color="#ff0000">'.$thissong.'</font></h1>';
+echo "或许也可以听听:<br>";
 
 foreach($arr_may as $k =>$song){
 	echo '<a href="'.$_SERVER['SCRIPT_NAME'].'?song='.urlencode($song).'">'.$song.'</a><br><br>';
 
 }
 
-
-echo "	@2012 <a href='http://www.shuaizhu.com' target='_blank'>Shuaizhu.com</a> </div>
+echo " 本播放器共播放了<span id='playCount'></span>首歌曲 @2012 <a href='http://www.shuaizhu.com' target='_blank'>Shuaizhu.com</a> </div>
 
 	</body>
 	</html>
