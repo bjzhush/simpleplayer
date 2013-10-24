@@ -7,7 +7,11 @@
  *
  */
 $fpath = 'music';
-$rand_num = 9;
+$rand_num = 17;
+$rand_del_cache = rand(1,10);
+if ($rand_del_cache = 8) {
+    unlink('cache.bin');
+}
 //检查refer，禁止连续播放相同都歌曲
 if (
         isset($_SERVER['QUERY_STRING'])  && 
@@ -104,6 +108,7 @@ echo "<html>
             document.getElementById('media').currentTime = document.getElementById('media').currentTime-5;
         } else if (key == 39) {
             document.getElementById('media').currentTime = document.getElementById('media').currentTime+5;
+        } else if (key == 39) {
         }
 	});
 
